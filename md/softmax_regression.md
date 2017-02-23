@@ -132,7 +132,7 @@ h_{\theta}(x)=E[T(y)|x;\theta]
 \end{matrix}\right]
 ```
 
-接下来就是用一组$$\theta$$来拟合给定的数据集了，首先是最大然似函数：
+接下来就是用一组$$\theta$$来拟合给定的数据集了，首先是最大似然估计函数：
 ```math
 L(\theta) = \prod_{i=1}^{m}P(y^{(i)}| x^{(i)}, \theta)
 

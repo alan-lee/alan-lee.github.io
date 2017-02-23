@@ -55,19 +55,59 @@ Cov(X, Y) = E[(X-E(X))(Y-E(Y))]
 y \sim Bernoulli(\phi)
 ```
 ```math
-x|y=0 \sim N(\mu_{0}, \Sigma_{0})
+x|y=0 \sim N(\mu_{0}, \Sigma)
 ```
 ```math
-x|y=1 \sim N(\mu_{1}, \Sigma_{1})
+x|y=1 \sim N(\mu_{1}, \Sigma)
 ```
+注意这里两个条件概率的协方差是一样，直观上说二者的协方差应该是不一致的，这样的模型会具有更好的普适性，但是会带来两方面的问题：
+1. 当样本不充分时，使用不同协方差矩阵会导致算法稳定性不够，而且过少的样本甚至导致协方差矩阵不可逆
+2. 使用不同协方差矩阵，最终GDA的分界面不是线性的
 
 则他们的概率密度函数是：
 ```math
 p(y) = \phi^{y}(1-\phi)^{1-y}
 ```
 ```math
-p(x|y=0; \mu_{0}, \Sigma_{0}) = \frac{1}{(2\pi)^{\frac{\pi}{2}}|\Sigma_{0}|^{\frac{1}{2}}}\exp(-\frac{1}{2}(x-\mu_{0})^{T}\Sigma_{0}^{-1}(x-\mu_{0}))
+p(x|y=0; \mu_{0}, \Sigma) = \frac{1}{(2\pi)^{\frac{\pi}{2}}|\Sigma|^{\frac{1}{2}}}\exp(-\frac{1}{2}(x-\mu_{0})^{T}\Sigma^{-1}(x-\mu_{0}))
 ```
 ```math
-p(x|y=1; \mu_{1}, \Sigma_{1}) = \frac{1}{(2\pi)^{\frac{\pi}{2}}|\Sigma_{1}|^{\frac{1}{2}}}\exp(-\frac{1}{2}(x-\mu_{1})^{T}\Sigma_{1}^{-1}(x-\mu_{1}))
+p(x|y=1; \mu_{1}, \Sigma) = \frac{1}{(2\pi)^{\frac{\pi}{2}}|\Sigma|^{\frac{1}{2}}}\exp(-\frac{1}{2}(x-\mu_{1})^{T}\Sigma^{-1}(x-\mu_{1}))
 ```
+
+接下来就是要估计上面公式种的这些参数，首先，还是要给出最大似然估计函数：
+```math
+L(\phi, \mu_{0}, \mu_{1}, \Sigma) = \prod_{i=1}^{m}p(x^{(i)}, y^{(i)}) = \prod_{i=1}^{m}p(x^{(i)}|y^{(i)})p(y^{(i)})
+```
+
+取对数
+```math
+l(\phi, \mu_{0}, \mu_{1}, \Sigma) = \sum_{i=1}^{m}\log p(x^{(i)}|y^{(i)}) + \sum_{i=1}^{m}\log p(y^{(i)})
+```
+```math
+=\sum_{i=1}^{m}\log(p(x^{(i)}|y^{(i)}=0)^{I(y^{(i)}=0)}\cdot p(x^{(i)}|y^{(i)}=1)^{I(y^{(i)}=1)}) + \sum_{i=1}^{m}\log p(y^{(i)})
+```
+```math
+= \sum_{i=1}^{m}I(y^{(i)}=0)\log p(x^{(i)}|y^{(i)}=0) + \sum_{i=1}^{m}I(y^{(i)}=1)\log p(x^{(i)}|y^{(i)}=1) + \sum_{i=1}^{m}\log p(y^{(i)})
+```
+等式中的$$I$$是指示函数，并且$$\sum_{i=1}^{m}I(y^{(i)}=0) + \sum_{i=1}^{m}I(y^{(i)}=1) = m)$$
+
+要最大化此函数，只需对各个参数求偏导数，再令偏导数为0，联合这几个等式即可求解参数。
+
+注意到此函数中，第一部分只和$$\mu_{0}$$和$$\Sigma$$有关，第二部分只和$$\mu_{1}$$和$$\Sigma$$有关，第三部分只和$$\phi$$有关，求偏导数的过程会相对简单。最后可得
+
+ ```math
+ \frac{\partial l(\phi, \mu_{0}, \mu_{1}, \Sigma)}{\partial \phi} = \frac{I(y^{(i)} = 1)}{m}
+ ```
+ ```math
+ \frac{\partial l(\phi, \mu_{0}, \mu_{1}, \Sigma)}{\partial \mu_{0}} = \frac{\sum_{i=1}^{m}I(y^{(i)} = 0)x^{(i)}}{\sum_{i=1}^{m}I(y^{(i)} = 0)}
+ ```
+ ```math
+ \frac{\partial l(\phi, \mu_{0}, \mu_{1}, \Sigma)}{\partial \mu_{1}} = \frac{\sum_{i=1}^{m}I(y^{(i)} = 1)x^{(i)}}{\sum_{i=1}^{m}I(y^{(i)} = 1)}
+ ```
+ ```math
+ \frac{\partial l(\phi, \mu_{0}, \mu_{1}, \Sigma)}{\partial \Sigma} = \frac{1}{m} \sum_{i=1}^{m}(x^{(i)} - \mu_{y^{(i)}})^{T}(x^{(i)} - \mu_{y^{(i)}})
+ ```
+ 其实，推到的结果和我们根据数据集，直观得出的数值是一直的。
+
+ 再有新的样本时，我们把这些参数都代入到概率密度函数的计算公式中，再由贝叶斯条件概率公式计算出$$p(y=0|x)$$和$$p(y=1|x)$$,比较两者大小即可得出分类。
