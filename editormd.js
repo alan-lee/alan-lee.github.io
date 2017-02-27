@@ -3961,11 +3961,11 @@
 
         var markdownParsed = marked(markdownDoc, markedOptions);
 
-        console.log(markdownParsed);
+        //console.log(markdownParsed);
 
         markdownParsed = editormd.filterHTMLTags(markdownParsed, settings.htmlDecode);
 
-        console.log(markdownParsed);
+        //console.log(markdownParsed);
 
         if (settings.markdownSourceCode) {
             saveTo.text(markdownDoc);
