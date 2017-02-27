@@ -3961,7 +3961,11 @@
 
         var markdownParsed = marked(markdownDoc, markedOptions);
 
+        console.log(markdownParsed);
+
         markdownParsed = editormd.filterHTMLTags(markdownParsed, settings.htmlDecode);
+
+        console.log(markdownParsed);
 
         if (settings.markdownSourceCode) {
             saveTo.text(markdownDoc);
@@ -4015,7 +4019,6 @@
             var katexHandle = function() {
                 div.find("." + editormd.classNames.tex).each(function(){
                     var tex  = $(this);
-                    console.log(tex.html());
                     katex.render(tex.html().replace(/&lt;/g, "<").replace(/&gt;/g, ">")
                         .replace(/&amp;/g, "&")
                         , tex[0]);

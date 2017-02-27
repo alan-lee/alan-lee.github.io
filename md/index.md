@@ -6,4 +6,6 @@
 
 3. [Softmax Regression](index.html?md=softmax_regression.md)
 
-4. Supported Vector Machine
+4. [Native Bayes](index.html?md=native_bayes.md)
+
+5. [Support Vector Machine](index.html?md=support_vector_machine.md)
