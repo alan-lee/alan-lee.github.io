@@ -30,7 +30,7 @@
     block.paragraph = replace(block.paragraph)("hr", block.hr)("heading", block.heading)("lheading", block.lheading)("blockquote", block.blockquote)("tag", "<" + block._tag)("def", block.def)();
     block.normal = merge({}, block);
     block.gfm = merge({}, block.normal, {
-        fences: /^ *(`{3,}|~{3,}|\${3,}) *(\S+)? *\n([\s\S]+?)\s*\1 *(?:\n+|$)/,
+        fences: /^ *(`{3,}|~{3,}) *(\S+)? *\n([\s\S]+?)\s*\1 *(?:\n+|$)/,
         paragraph: /^/
     });
     block.gfm.paragraph = replace(block.paragraph)("(?!", "(?!" + block.gfm.fences.source.replace("\\1", "\\2") + "|" + block.list.source.replace("\\1", "\\3") + "|")();

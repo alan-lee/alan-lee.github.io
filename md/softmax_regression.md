@@ -148,7 +148,7 @@ l(\theta) = \sum_{i=1}^{m}\sum_{j=1}^{k}I(y=j)(\theta_{(j-1)}^{T}X - \log({\sum_
 
 对$$l(\theta)$$求梯度有：
 ```math
-\triangledown_{\theta_{j}}l(\theta) = \sum_{i=1}^{m}(x^{(i)}(I(y^{(i)}=j) - P(y^{(i)} = j|x^{(i)},\theta)))
+\bigtriangledown_{\theta_{j}}l(\theta) = \sum_{i=1}^{m}(x^{(i)}(I(y^{(i)}=j) - P(y^{(i)} = j|x^{(i)},\theta)))
 ```
 
 其中$$\triangledown_{\theta_{j}} l(\theta)$$本身也是一个向量，它的第$$l$$个元素$$\frac{\partial l(\theta)}{\partial \theta_{jl}}$$是$$l(\theta)$$对$$ \theta_{j} $$的第$$l$$个分量的偏导数。
