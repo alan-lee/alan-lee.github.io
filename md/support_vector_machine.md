@@ -110,7 +110,7 @@ s.t. \quad y^{(i)}(w^{T}x^{(i)} + b) \geqslant 1, \space i = 1, 2, \cdots, m
 ```
 注意求$$\frac{1}{\|w\|}$$的最大值即求$$\|w\|^{2}$$的最小值。上面加上$$\frac{1}{2}$$是为了后面的计算方便。
 
-新的问题是一个二次优化的问题，利用拉格朗日对偶性将该问题转化成对偶问题，可以通过求解对偶问题来得到原始问题的解。
+新的问题是一个二次规化的问题，利用拉格朗日对偶性将该问题转化成对偶问题，可以通过求解对偶问题来得到原始问题的解。
 
 ## 拉格朗日对偶性
 在求解一些带约束条件的最优化问题时，常常利用拉格朗日对偶性将该问题转化成对偶问题，可以通过求解对偶问题来得到原始问题的解。
@@ -195,7 +195,7 @@ d^{*} \leqslant p^{*}
 
 所以
 ```math
-\max \theta_{D}(\alpha, \beta) \leqslant \min \theta_{P}(x)   
+\max \theta_{D}(\alpha, \beta) \leqslant \min \theta_{P}(x)
 ```
 
 若存在$$\alpha^{*}, \beta^{*}, x^{*} $$, 使得
@@ -233,7 +233,7 @@ h_{j}(x^{*}) = 0, \quad j = 1, 2, \cdots, l
 
 上面第4个等式称为KKT对偶互补条件，由此条件可知：若$$\alpha^{*}_{i} \gt 0$$, 则$$c_{i}(x^{*}) = 0$$
 
-### 最大间隔的对偶性
+### SVM的对偶性
 之前我们已经给出最大间隔的原始问题：
 ```math
 \min \limits_{w,b} \frac{1}{2}\|w\|^{2}
@@ -256,7 +256,7 @@ L(\alpha, w, b) = \frac{1}{2}\|w\|^{2} - \sum_{i=1}^{m}\alpha_{i}( y^{(i)}(w^{T}
 
 上面假设几何间隔$$\gamma = 1$$，根据几何间隔的定义，点$$x^{(i)}$$就是离超平面最近的点，这样的点叫做支持向量。
 
-为了满足KKT条件，对拉格朗日函数求各个参数的梯度：
+首先求$$L(\alpha, w, b)$$对参数$$w,b$$的极小值：
 ```math
 \bigtriangledown_{w}L(\alpha, w, b) = w - \sum_{i=1}^{m}\alpha_{i}y^{(i)}x^{(i)} = 0
 ```
@@ -270,11 +270,204 @@ w = \sum_{i=1}^{m}\alpha_{i}y^{(i)}x^{(i)}
 \bigtriangledown_{b}L(\alpha, w, b) = \sum_{i=1}^{m}\alpha_{i}y^{(i)} = 0
 ```
 
-根据上面的等于可以简化拉格朗日函数：
+将上面的等式待入到拉格朗日函数：
 ```math
-L(\alpha, w, b) = \frac{1}{2}\|w\|^{2} - \sum_{i=1}^{m}\alpha_{i}( y^{(i)}(w^{T}x^{(i)} + b) - 1)
+\min \limits_{w, b} L(\alpha, w, b) = \frac{1}{2}\|w\|^{2} - \sum_{i=1}^{m}\alpha_{i}( y^{(i)}(w^{T}x^{(i)} + b) - 1)
 ```
 ```math
-=
+= \frac{1}{2}w^{T}w - \sum_{i=1}^{m}\alpha_{i}y^{(i)}w^{T}x^{(i)} - b\sum_{i=1}^{m}\alpha_{i}y^{(i)} + \sum_{i=1}^{m}\alpha_{i}
 ```
+```math
+=\frac{1}{2}w^{T}(\sum_{i=1}^{m}\alpha_{i}y^{(i)}x^{(i)}) - w^{T}(\sum_{i=1}^{m}\alpha_{i}y^{(i)}x^{(i)}) + \sum_{i=1}^{m}\alpha_{i}
+```
+```math
+=-\frac{1}{2}w^{T}(\sum_{i=1}^{m}\alpha_{i}y^{(i)}x^{(i)}) + \sum_{i=1}^{m}\alpha_{i}
+```
+```math
+=-\frac{1}{2}(\sum_{i=1}^{m}\alpha_{i}y^{(i)}x^{(i)})^{T}(\sum_{i=1}^{m}\alpha_{i}y^{(i)}x^{(i)}) + \sum_{i=1}^{m}\alpha_{i}
+```
+```math
+=\sum_{i=1}^{m}\alpha_{i} - \frac{1}{2}\sum_{i,j=1}^{m}\alpha_{i}\alpha_{j}y^{(i)}y^{(j)}(x^{(i)})^{T}x^{(j)}
+```
+上面的式子中已经没有$$w,b$$了，这样，在满足KKT条件时，可以把原始问题，转化为下面的对偶问题
+```math
+\max \limits_{\alpha} \sum_{i=1}^{m}\alpha_{i} - \frac{1}{2}\sum_{i,j=1}^{m}\alpha_{i}\alpha_{j}y^{(i)}y^{(j)}(x^{(i)})^{T}x^{(j)}
+```
+```math
+s.t. \quad \alpha_{i} \geqslant 0, \space i=1, 2, \cdots, m
+```
+```math
+\sum_{i=1}^{m}\alpha_{i}y^{(i)} = 0
+```
+
+这样，求出了$$\alpha$$，就可以计算出$$w$$，计算$$b$$的过程稍有些复杂，对于超平面$$w^{T}x + b$$来说，为了使分类的预测更加准确，正负样本中的支持变量的几何间隔一定使相同的，假设$$w$$的最优解是$$w^{*}$$, $$b$$的最优解是$$b^{*}$$，则有：
+```math
+\max \limits_{i:y^{(i)} = -1} (w^{*})^{T}x^{(i)} + b = \min \limits_{i:y^{(i)} = 1} (w^{*})^{T}x^{(i)} + b
+```
+```math
+b = - \frac{\max \limits_{i:y^{(i)} = -1} (w^{*})^{T}x^{(i)} + \min \limits_{i:y^{(i)} = 1} (w^{*})^{T}x^{(i)}}{2}
+```
+
+在计算出$$w,b$$之后，最可以根据
+```math
+w^{T}x + b = \sum_{i=1}^{m}\alpha_{i}y^{(i)}(x^{(i)})^{T}x + b
+```
+来判断新的样本的分类了，其中，只有支持向量的$$\alpha_{i} \neq 0$$，所以大量的非支持向量都不需要计算，所以$$w^{T}x + b$$的计算效率会很高。
+
+上面已经给出了SVM的对偶问题，并且分析了在求得对偶问题的解后，如何来预测新样本的分类。求解对偶问题中的拉格朗日算数$$\alpha$$，最常用的算法就是SMO，后文中会的详细介绍这一算法。下面先对如何处理线性不可分的数据集做一些讨论。
+
+# 线性不可分和软间隔
+以上的最大间隔分类算法对于线性不可分的样本集是不适用的，因为上述的约束不等于并不是对于数据集中的所有点都能成立。一般的情况是，样本集中的少数的特异点，去掉这些样本后，剩下的大部分样本组成的数据集是线性可分的。
+
+为了解决这个问题，我们对每个样本$$(x^{(i)}, y^{(i)})$$引入一个松弛变量$$\xi_{i} \geqslant 0$$，这样，约束条件变成了
+```math
+y^{(i)}(w^{T}.x^{(i)} + b) \geqslant 1 - \xi_{i}, \quad i = 1, 2, \cdots, m
+```
+同样，为了使分类更为准确，我们希望$$\xi_{i}$$越小越好，所以在目标函数后加上一个L1范数正规化选项:
+```math
+\frac{1}{2} \|w\|^{2} + C\sum_{i=1}^{m}\xi_{i}
+```
+这里的$$C \gt 0$$称为惩罚参数，$$C$$的值大时，对特异点的惩罚加大，$$C$$的值小时，对特异点的惩罚变大，最小化新的目标函数，一方面是要最小化几何间隔，另一方面，可要使特异点尽可能的稍，参数C就是用来调整两者的权重的。
+
+注意到当$$\xi_{i} = 0$$，问题就退化成线性可分数据集的情况了。这种处理线性不可分数据集的SVM算法称为软间隔最大化算法。
+
+软间隔最大化算法的原始问题为：
+```math
+\min \limits_{w, b, \xi} \frac{1}{2} \|w\|^{2} + C\sum_{i=1}^{m}\xi_{i}
+```
+```math
+s.t. \quad y^{(i)}(w^{T}.x^{(i)} + b) \geqslant 1 - \xi_{i}, \quad i = 1, 2, \cdots, m
+```
+```math
+\xi_{i} \geqslant 0, \quad i = 1, 2, \cdots, m
+```
+
+原始问题的拉格朗日函数
+```math
+L(w, b, \xi, \alpha, \beta) = \frac{1}{2} \|w\|^{2} + C\sum_{i=1}^{m}\xi_{i} - \sum_{i=1}^{m}\alpha_{i}( y^{(i)}(w^{T}x^{(i)} + b) - 1 + \xi_{i}) - \sum_{i=1}^{m}\beta_{i}\xi_{i}
+```
+其中$$\alpha_{i} \geqslant 0,  \beta_{i} \geqslant 0$$，首先求$$L(w, b, \xi, \alpha, \beta)$$对$$w,b,\xi$$的极小：
+
+```math
+\bigtriangledown_{w}L(w, b, \xi, \alpha, \beta) = w - \sum_{i=1}{m} \alpha_{i}y^{(i)}x^{(i)} = 0
+```
+即
+```math
+w = \sum_{i=1}{m} \alpha_{i}y^{(i)}x^{(i)}
+```
+```math
+\bigtriangledown_{b}L(w, b, \xi, \alpha, \beta) = - \sum_{i=1}{m} \alpha_{i}y^{(i)} = 0
+```
+```math
+\bigtriangledown_{\xi}L(w, b, \xi, \alpha, \beta) = C - \alpha - \beta = 0
+```
+
+代入到$$L(w, b, \xi, \alpha, \beta)$$中得：
+```math
+\min \limits_{w, b, \xi} L(w, b, \xi, \alpha, \beta) = \sum_{i=1}^{m}\alpha_{i} - \frac{1}{2}\sum_{i,j=1}^{m}\alpha_{i}\alpha_{j}y^{(i)}y^{(j)}(x^{(i)})^{T}x^{(j)}
+```
+
+可得原始问题的对偶问题为：
+```math
+\max \limits_{\alpha, \beta} \sum_{i=1}^{m}\alpha_{i} - \frac{1}{2}\sum_{i,j=1}^{m}\alpha_{i}\alpha_{j}y^{(i)}y^{(j)}(x^{(i)})^{T}x^{(j)}
+```
+```math
+s.t. \quad \sum_{i=1}{m} \alpha_{i}y^{(i)} = 0, i = 1, 2, \cdots, m
+```
+```math
+C - \alpha_{i} - \beta_{i} = 0, i = 1, 2, \cdots, m
+```
+```math
+\alpha_{i} \geqslant 0, i = 1, 2, \cdots, m
+```
+```math
+\beta_{i} \geqslant 0, i = 1, 2, \cdots, m
+```
+
+再消去约束条件中的$$\beta_{i}$$，得新的约束条件：
+```math
+s.t. \quad 0 \leqslant \alpha_{i} \leqslant C, i = 1, 2, \cdots, m
+```
+
+和线性可分数据集的算法一样，在求得拉格朗日乘数$$\alpha$$之后，可以计算出$$w,b$$，再根据$$h(x) = g(w^{T}x + b)$$来预测新样本的分类了。
+# Hinge Loss
+在介绍其他的线性学习算法时，我们都提到了损失函数(Loss Function)，对于SVM来说，也有损失函数：
+```math
+J(w, b) = \sum_{i=1}^{m}l(w^{T}x^{(i)} + b) + \lambda \|w\|^{2}
+```
+
+其中，对于样本$$x^{(i)}$$和其预测结果$$y^{(i)} = \pm 1$$，
+
+```math
+l(t(x^{(i)})) = \left\{\begin{matrix}
+0 &  t(x^{(i)}) \leqslant 0
+\\1 - y^{(i)}t(x^{(i)}) & t(x^{(i)}) \gt 0
+\end{matrix}\right.
+```
+$$l(t)$$称为hinge损失函数。
+
+可以证明，$$\min \limits_{w,b} J(w,b)$$和 $$\min \limits_{w,b,\xi} \frac{1}{2} \|w\|^{2} + C\sum_{i=1}^{m}\xi_{i}$$是等价的。
 # 核函数
+## 向量内积
+有向量$$x,y$$，定义其内积运算$$\left \langle x \cdot y \right \rangle = x^{T}y = y^{T}x$$，显然，向量的内积运算的结果是一个标量。
+
+我们可以把上面的分析得到的对偶问题写成内积的形式:
+```math
+\max \limits_{\alpha} \sum_{i=1}^{m}\alpha_{i} - \frac{1}{2}\sum_{i,j=1}^{m}\alpha_{i}\alpha_{j}y^{(i)}y^{(j)} \left \langle x^{(i)} \cdot x^{(j)} \right \rangle
+```
+在预测分类时，也可以利用内积：
+```math
+w^{T}x + b = \sum_{i=1}^{m}\alpha_{i}y^{(i)} \left \langle x^{(i)} \cdot x \right \rangle
+```
+## 核技巧
+上面我们讨论的样本线性集不可分的问题主要是针对样本集中有一些特异点的情况，还有一种情况是样本集中的数据无法通过一个平面将其分开，但是可以通过一个曲面将其分开，也就是说可以用非线性模型来分类。
+
+对于这类问题，我们可以通过一些函数变换，把非线性模型变换成线性模型。例如，已有数据集$${(x^{(1)}, y^{(1)}), (x^{(2)}, y^{(2)}), \cdots, (x^{(m)}, y^{(m)})}$$，其中$$x \in R^{2}$$，
+已知该数据集中的两个类别可以被椭圆$$w_{1}x_{1}^{2} + w_{2}x_{2}^{2} + b =0$$分来。我们令$$z=\phi(x)=(x_{1}^{2}, x_{2}^{2})$$，把原空间的数据映射到新空间中，原空间中椭圆方程在新空间中就变成了$$w_{1}z_{1} + w_{2}z_{2} + b =0$$，这表示一条直线，这样数据集就变成线性可分的了。
+
+核技巧就是用函数变换把原空间的数据映射到新的空间中，使得在原模型在新空间中变成一个线性问题，然后通过线性学习算法来求解。
+
+大多数时候，我们并不能很简单的得到映射函数$$\phi(x)$$，或者是映射函数很复杂，会把原空间2维，3维的数据映射成$$n$$维或是无限维，这样在计算内积运算时，会变得非常复杂。
+为了解决这一问题，我们可以并不显示的定义映射函数$$\phi(x)$$，而是用核函数来计算内积。核函数的定义如下：
+
+对于输入空间$$X$$，设$$H$$为特征空间(希尔伯特空间)，如果存在一个从$$X \rightarrow H$$的映射$$\phi(x)$$，使得对所有的$$x, z \in X$$，函数$$K(x, z)$$都满足：
+```math
+K(x, z) = \left \langle \phi(x) \cdot \phi(z) \right \rangle
+```
+则称$$K(x, z)$$为核函数，$$\phi(x)$$为映射函数。
+
+一般来说，我们在学习和预测的过程中，只会定义核函数$$K(x, z)$$，并不会显示的定义映射函数$$\phi(x)$$，这是因为直接计算$$K(x, z)$$比通过$$\phi(x)$$来计算$$K(x, z)$$要简单一些。
+
+## 核函数的正定性
+有样本集$$x^{(1)}, x^{(2)}, \cdots, x^{(m)} \in R^{n}$$, $$K$$是$$R^{n} \times R^{n} \rightarrow R$$的一个映射。
+令矩阵
+```math
+K = \begin{bmatrix}
+ K(x^{(1)}, x^{(1)}) & K(x^{(1)}, x^{(2)}) & \cdots & K(x^{(1)}, x^{(m)}) \\
+ K(x^{(2)}, x^{(1)}) & K(x^{(2)}, x^{(2)}) & \cdots & K(x^{(2)}, x^{(m)}) \\
+ \vdots & \vdots & \ddots &\vdots \\
+ K(x^{(m)}, x^{(1)}) & K(x^{(m)}, x^{(2)}) & \cdots & K(x^{(m)}, x^{(m)}) \\
+\end{bmatrix}
+```
+函数$$K$$是一个有效核函数的充要条件是矩阵$$K$$是一个对称半正定矩阵。
+其中，矩阵$$K$$叫做核函数矩阵。
+
+## 常用的核函数
+1. 线性核函数
+```math
+K(x, z) = c\left \langle x \cdot z \right \rangle +d
+```
+2. 多项式核函数
+```math
+K(x, z) = (c\left \langle x \cdot z \right \rangle +d)^{p}
+```
+3. 高斯核函数
+```math
+K(x, z) = \exp(-\frac{\|x-z\|^{2}}{2\sigma^{2}})
+```
+高斯核函数是径向基核函数的一种，径向基核函数是指由特定点间的距离决定其值的函数。
+
+4. Sigmoid核函数
+```math
+K(x, z) = \tanh(c\left \langle x \cdot z \right \rangle +d)
+```
