@@ -9,3 +9,5 @@
 4. [Native Bayes](index.html?md=native_bayes.md)
 
 5. [Support Vector Machine](index.html?md=support_vector_machine.md)
+
+6. [Sequential Minimal Optimization Algorithm](index.html?md=smo.md)

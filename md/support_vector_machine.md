@@ -89,11 +89,11 @@ w^{T}x^{(i)} - \gamma^{(i)} \cdot\frac{w^{T}w}{\|w\|} + b = 0
     \gamma = \mathop{\min} \limits_{i=1 \cdots m} \gamma^{(i)}
 ```
 
-# 最大间隔分类算法
-根据上面的分析，我们已经给问题建立好模型了，所谓最大间隔分类算法，就是要找到一组参数，使得数据集的几何间隔$$\gamma$$最大。
+# 最大化间隔分类算法
+根据上面的分析，我们已经给问题建立好模型了，所谓最大化间隔分类算法，就是要找到一组参数，使得数据集的几何间隔$$\gamma$$最大。
 
-## 最大间隔模型
-我们要解决的问题是：
+## 最大化间隔的原始问题
+我们要解决的原始问题是：
 ```math
 f(w,b) = \max \limits_{w,b} \gamma = \max \limits_{w,b} \frac{\hat{\gamma}}{\|w\|}
 ```
@@ -336,7 +336,7 @@ y^{(i)}(w^{T}.x^{(i)} + b) \geqslant 1 - \xi_{i}, \quad i = 1, 2, \cdots, m
 \min \limits_{w, b, \xi} \frac{1}{2} \|w\|^{2} + C\sum_{i=1}^{m}\xi_{i}
 ```
 ```math
-s.t. \quad y^{(i)}(w^{T}.x^{(i)} + b) \geqslant 1 - \xi_{i}, \quad i = 1, 2, \cdots, m
+s.t. \quad y^{(i)}(w^{T}x^{(i)} + b) \geqslant 1 - \xi_{i}, \quad i = 1, 2, \cdots, m
 ```
 ```math
 \xi_{i} \geqslant 0, \quad i = 1, 2, \cdots, m
@@ -349,14 +349,14 @@ L(w, b, \xi, \alpha, \beta) = \frac{1}{2} \|w\|^{2} + C\sum_{i=1}^{m}\xi_{i} - \
 其中$$\alpha_{i} \geqslant 0,  \beta_{i} \geqslant 0$$，首先求$$L(w, b, \xi, \alpha, \beta)$$对$$w,b,\xi$$的极小：
 
 ```math
-\bigtriangledown_{w}L(w, b, \xi, \alpha, \beta) = w - \sum_{i=1}{m} \alpha_{i}y^{(i)}x^{(i)} = 0
+\bigtriangledown_{w}L(w, b, \xi, \alpha, \beta) = w - \sum_{i=1}^{m} \alpha_{i}y^{(i)}x^{(i)} = 0
 ```
 即
 ```math
-w = \sum_{i=1}{m} \alpha_{i}y^{(i)}x^{(i)}
+w = \sum_{i=1}^{m} \alpha_{i}y^{(i)}x^{(i)}
 ```
 ```math
-\bigtriangledown_{b}L(w, b, \xi, \alpha, \beta) = - \sum_{i=1}{m} \alpha_{i}y^{(i)} = 0
+\bigtriangledown_{b}L(w, b, \xi, \alpha, \beta) = - \sum_{i=1}^{m} \alpha_{i}y^{(i)} = 0
 ```
 ```math
 \bigtriangledown_{\xi}L(w, b, \xi, \alpha, \beta) = C - \alpha - \beta = 0
@@ -372,7 +372,7 @@ w = \sum_{i=1}{m} \alpha_{i}y^{(i)}x^{(i)}
 \max \limits_{\alpha, \beta} \sum_{i=1}^{m}\alpha_{i} - \frac{1}{2}\sum_{i,j=1}^{m}\alpha_{i}\alpha_{j}y^{(i)}y^{(j)}(x^{(i)})^{T}x^{(j)}
 ```
 ```math
-s.t. \quad \sum_{i=1}{m} \alpha_{i}y^{(i)} = 0, i = 1, 2, \cdots, m
+s.t. \quad \sum_{i=1}^{m} \alpha_{i}y^{(i)} = 0, i = 1, 2, \cdots, m
 ```
 ```math
 C - \alpha_{i} - \beta_{i} = 0, i = 1, 2, \cdots, m
@@ -387,6 +387,13 @@ C - \alpha_{i} - \beta_{i} = 0, i = 1, 2, \cdots, m
 再消去约束条件中的$$\beta_{i}$$，得新的约束条件：
 ```math
 s.t. \quad 0 \leqslant \alpha_{i} \leqslant C, i = 1, 2, \cdots, m
+```
+其KKT对偶互补条件为：
+```math
+\alpha_{i}(1 - \xi_{i} - (w^{T}x^{(i)} + b)) = 0, i = 1, 2, \cdots, m
+```
+```math
+\beta_{i}\xi_{i} = 0, i = 1, 2, \cdots, m
 ```
 
 和线性可分数据集的算法一样，在求得拉格朗日乘数$$\alpha$$之后，可以计算出$$w,b$$，再根据$$h(x) = g(w^{T}x + b)$$来预测新样本的分类了。
