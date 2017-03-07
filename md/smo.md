@@ -112,7 +112,7 @@ W(\alpha_{2}) = \frac{1}{2}K_{11}(\zeta - y^{(2)}\alpha_{2})^{2} + \frac{1}{2}K_
 ```
 $$\phi(x)$$是输入空间到特征空间的映射。
 
-下面再看如果来裁剪$$\alpha_{2}^{new, unc}$$
+下面再看如何来裁剪$$\alpha_{2}^{new, unc}$$
 设$$\alpha_{2}^{new, unc}$$的上下界分别是$$L$$和$$H$$，
 则有
 ```math
@@ -189,7 +189,7 @@ b_{1}^{new} = b^{old} - (E_{1}^{old} + y^{(1)}K_{11}(\alpha_{1}^{new} - \alpha_{
 b_{2}^{new} = b^{old} - (E_{2}^{old} + y^{(1)}K_{12}(\alpha_{1}^{new} - \alpha_{1}^{old}) + y^{(2)}K_{22}(\alpha_{2}^{new} - \alpha_{2}^{old}))
 ```
 
-如果$$\alpha_{1}^{new}, \alpha_{2}^{new}$$同时满足条件$$0 \lt \alpha_{i}^{new} \lt C, i=1,2$$，那么有$$b^{new} = b_{1}^{new} = b_{2}^{new}$$，若$$\alpha_{1}^{new}, \alpha_{2}^{new}$$是$$0$$或$$C$$，那么$$b_{1}^{new}, b_{2}^{new}$$以及他们之间的值都是符合KKT条件的阈值，我们可以选择$$b^{new} = \frac{b_{1}^{new} = b_{2}^{new}}{2}$$。
+如果$$\alpha_{1}^{new}, \alpha_{2}^{new}$$同时满足条件$$0 \lt \alpha_{i}^{new} \lt C, i=1,2$$，那么有$$b^{new} = b_{1}^{new} = b_{2}^{new}$$，若$$\alpha_{1}^{new}, \alpha_{2}^{new}$$是$$0$$或$$C$$，那么$$b_{1}^{new}, b_{2}^{new}$$以及他们之间的值都是符合KKT条件的阈值，我们可以选择$$b^{new} = \frac{b_{1}^{new} + b_{2}^{new}}{2}$$。
 
 每次更新完两个变量的值后，还需要更新其对应的误差$$E_{i}$$，
 ```math
