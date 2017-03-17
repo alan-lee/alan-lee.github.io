@@ -16,7 +16,8 @@ I(y=i) = \left\{\begin{matrix}
 1,  \quad y =  i
 \\ 0, \quad y \neq i
 \end{matrix}\right.
-
+```
+```math
 I(y=k) = 1 - \sum_{i=1}^{k-1}I(y=i)
 ```
 那么
