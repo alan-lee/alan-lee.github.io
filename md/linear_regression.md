@@ -83,16 +83,16 @@ g(x) = \frac{1}{1 + \exp(-x)}
 下图是Sigmoid函数在坐标轴上的图像，形状类似于S形的曲线，其值在区间$$(0, 1)$$内，和纵轴的交点是$$0.5$$，函数值的变化速度在靠近纵轴时加快，远离纵轴时变缓。
 ![image](http://oirw7ycq0.bkt.clouddn.com/sigmoid.png)
 
-当$$g(\theta^{T}x) \geqslant 0.5$$时，$$p(y=1|x,\theta) \geqslant 0.5$$,可以认为样本结果$$y = 1$$，当$$g(\theta^{T}x) \lt 0.5$$时，认为样本结果$$y = 0$$。
+当$$g(\theta^{T}x) \geqslant 0.5$$时，$$p(y=1|x;\theta) \geqslant 0.5$$,可以认为样本结果$$y = 1$$，当$$g(\theta^{T}x) \lt 0.5$$时，认为样本结果$$y = 0$$。
 
 根据以上的模型，我们得出Logistic回归的假设函数就可以写成
 ```math
-h_{\theta}(x) = p(y = 1| x, \theta) = g(\theta^{T}x) = \frac{1}{1 + \exp(-\theta^{T}x)}
+h_{\theta}(x) = p(y = 1| x; \theta) = g(\theta^{T}x) = \frac{1}{1 + \exp(-\theta^{T}x)}
 ```
 对于概率最大化的问题，我们一般是用最大似然估计函数来求解的。
 由伯努利分布的概率知：
 ```math
-p(y | x, \theta) = \phi^{y}(1 - \phi)^{1 -y} =
+p(y | x; \theta) = \phi^{y}(1 - \phi)^{1 -y} =
 ```
 最大似然估计函数为
 ```math
