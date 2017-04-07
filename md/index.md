@@ -17,5 +17,3 @@
 8. [Learning Theory](index.html?md=learning_theory.md)
 
 9. [Clustering](index.html?md=clustering.md)
-
-10. [Expectation Maximization Algorithm](index.html?md=em.md)
