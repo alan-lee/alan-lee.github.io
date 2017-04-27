@@ -14,6 +14,8 @@
 
 7. [Sequential Minimal Optimization Algorithm](index.html?md=smo.md)
 
+8. [Maximun Entropy Model](index.html?md=maxinum_entropy.md)
+
 8. AdaBoost
 
 9. [Learning Theory](index.html?md=learning_theory.md)

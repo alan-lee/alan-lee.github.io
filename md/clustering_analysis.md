@@ -38,7 +38,7 @@ J(c, \mu) = \sum_{i=1}^{m}\|x^{(i)} - \mu_{c^{(i)}}\|^{2}
 最后说明以下，上述的K-Means算法的介绍中，我们是用欧氏距离来衡量两个点的相似性的，其实也可以采用其他的标准，例如：余弦相似性。
 
 # Gaussian Mixture Model
-和K-Means基于距离的算法不一样，混合高斯模型是一种基于分布模型的聚类算法。混合高斯模型考虑的是从样本集中拟合出数据的概率密度函数。假定样本集是有$$K$$个集群组成，每个集群都服从某种分布，混合高斯模型假定每个集群中都服从某个多元高斯分布。其先验分布就是样本属于这$$K$$个集群。
+和K-Means基于距离的算法不一样，混合高斯模型是一种基于分布模型的聚类算法。混合高斯模型考虑的是从样本集中拟合出数据的概率密度函数。假定样本集是有$$K$$个集群组成，每个集群都服从某种分布，混合高斯模型假定每个集群中都服从某个多元高斯分布。
 
 首先回忆一下多元高斯分布，这个模型在介绍高斯辨别分析的时候提到过，多元高斯分布的概率密度函数为：
 ```math
@@ -101,7 +101,7 @@ w_{j}^{(i)} = p(z^{(i)} = j | x^{(i)}; \phi, \mu, \Sigma)
 ```
 对比在高斯辨别分析算法中，我们计算出的$$\phi$$，$$\mu$$和$$\Sigma$$，可以看到，在EM算法中，我们用概率来代替了指示函数，这是因为样本中并没有给出标签，我们只能根据样本计算出$$z$$的后验概率。
 
-# 期望最大(Expectation Maximization)算法
+# Expectation Maximization
 下面介绍EM算法的一般形式和推导过程。
 给定样本集$$\{x^{(1)}, x^{(2)}, \cdots, x^{(m)}\}, x^{(i)} \in R^{n}$$，且样本间独立。我们的目标是将这个$$m$$个样本划分成$$k$$个集群，即找到每个样本属于的集群$$z$$，使得$$p(x, z;\theta)$$最大，其中$$\theta$$为参数。
 
@@ -213,7 +213,7 @@ l(\theta^{(t + 1)}) \geqslant \sum_{i=1}^{m}\sum_{z^{(i)}}Q^{(t)}_{i}(z^{(i)})\l
 J(\phi, \mu, \Sigma) =  \sum_{i=1}^{m}\sum_{j=1}^{k}w_{j}^{(i)}\log \frac{\frac{1}{(2\pi)^{\frac{n}{2}}|\Sigma|^{\frac{1}{2}}}\exp(-\frac{1}{2}(x-\mu)^{T}\Sigma^{-1}(x-\mu))  \cdot \phi}{w_{j}^{(i)}}
 ```
 
-求解$$\frac{\bigtriangledown }{\bigtriangledown \mu} J(\phi, \mu, \Sigma)= 0$$和$$\frac{\bigtriangledown }{\bigtriangledown \Sigma} J(\phi, \mu, \Sigma)= 0$$可得$$\mu_{j} = \frac{\sum_{i=1}^{m}w_{j}^{(i)}x^{(i)}}{\sum_{i=1}^{m}w_{j}^{(i)}}$$和$$\Sigma_{j} = \frac{\sum_{i=1}^{m}w_{j}^{(i)}(x^{(i)} - \mu_{j})(x^{(i)} - \mu_{j})^{T}}{\sum_{i=1}^{m}w_{j}^{(i)}}$$
+求解$$\bigtriangledown_{\mu} J(\phi, \mu, \Sigma)= 0$$和$$\bigtriangledown_{\Sigma} J(\phi, \mu, \Sigma)= 0$$可得$$\mu_{j} = \frac{\sum_{i=1}^{m}w_{j}^{(i)}x^{(i)}}{\sum_{i=1}^{m}w_{j}^{(i)}}$$和$$\Sigma_{j} = \frac{\sum_{i=1}^{m}w_{j}^{(i)}(x^{(i)} - \mu_{j})(x^{(i)} - \mu_{j})^{T}}{\sum_{i=1}^{m}w_{j}^{(i)}}$$
 
 求解$$\phi$$的过程相对复杂，因为还有一个约束条件$$\sum_{i=1}^{k}\phi_{i} = 1$$，因此不能直接求导，只能通过拉格朗日乘数法来求解。
 在去掉常数项后，我们优化的目标函数可以简化为$$J(\phi) = \sum_{i=1}^{m}\sum_{j=1}^{k}w_{j}^{(i)}\log \phi_{j}$$，构造拉格朗日乘数：
