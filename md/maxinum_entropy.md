@@ -55,7 +55,7 @@ H(Y|X) = \sum_{i=1}^{m}p(x_{i})H(Y|X=x_{i}) = -\sum_{i=1}^{m}p(x_{i})\sum_{j=1}^
 # 最大熵原理
 从上面推导$$H(X)$$上限的过程中，可以得出结论，当没有其他的约束条件的情况下，当随机变量所有可能的值的概率相同时，熵最大。最简单的例子就是在抛硬币的时候，我们一般认为正反面的概率各占$$\frac{1}{2}$$，这就是最大熵原理的一个典型应用。上硬币的例子是在理想的环境下进行的实验，现实中，硬币的质量不可能是完全均匀的，而且在上抛和下降的过程中，风向，抛起时的角度都会影响最后的结果。所以在实际问题中，还需要满足已有的约束条件。
 
-我们我们为什么会认为“等概率”是最合理的呢？因为我们在没有其他任何信息的情况下，我们只能认为对于未知的分布模型来说，最随机的，最不确定的才是最客观的，也是风险最小的。改变某个值的概率就意味着在我们没有更多的信息的情况下，我们增加了主观的约束。如果定义“最随机的”呢？在满足约束条件的情况下，显然我们不能再用“等概率”去解决问题，而熵就是表示信息的不确定程序的，而且是一个可优化的数值指标。
+我们我们为什么会认为“等概率”是最合理的呢？因为我们在没有其他任何信息的情况下，我们只能认为对于未知的分布模型来说，最随机的，最不确定的才是最客观的，也是风险最小的。改变某个值的概率就意味着在我们没有更多的信息的情况下，我们增加了主观的约束。如果定义“最随机的”呢？在满足约束条件的情况下，显然我们不能再用“等概率”去解决问题，而熵就是表示信息的不确定程度的，而且是一个可优化的数值指标。
 
 最大熵原理就是说在学习概率模型时，在所有满足约束条件的概率模型中，熵最大的模型是最好的模型。
 
@@ -187,7 +187,7 @@ l(w) = \sum_{x, y}\tilde{p}(x,y)\log p(y|x)
 ```
 需要说明的是这里用到的是最大似然估计的指数形式。相当于把通常定义的最大似然函数开了$$m$$次方，这是为了引出$$\tilde{p}(x,y)$$，本质上并没有区别。
 
-再换一个角度，注意到，我们优化的目标$$-H(X)$$是一个凸函数，而且$$h(x) = E_{\tilde{P}}(f_{i}) - E_{P}(f_{i}) $$是一群仿射函数。这样，很容易联系到拉格朗日函数的对偶问题和KKT条件。
+再换一个角度，注意到，我们优化的目标$$-H(X)$$是一个凸函数，而且$$h(x) = E_{\tilde{P}}(f_{i}) - E_{P}(f_{i}) $$是一组仿射函数。这样，很容易联系到拉格朗日函数的对偶问题和KKT条件。
 
 我们优化的原始问题等价于
 ```math
@@ -252,7 +252,7 @@ L(P^{*}, w) = \sum_{x, y}\tilde{p}(x)p^{*}(y|x)\log p^{*}(y|x) + w_{0}(1 - \sum_
 5. 若$$|\log \frac{E_{\tilde{P}}(f_{i})}{E_{p}(f_{i})}| \lt \epsilon$$，则停止迭代，否则转到第3步
 
 其中的$$\eta$$类似梯度下降法中的学习率，一般可设为$$\frac{1}{\sum_{i=1}^{n}f_{i}(x,y)}$$。
-GIS算法的问题是每次迭代需要的时间都很长，而且徐亚很多次迭代才能收敛，后来有人提出了改进的IIS(Improved Iterative Scaling)算法，使得最大熵模型变得实用。
+GIS算法的问题是每次迭代需要的时间都很长，而且需要很多次迭代才能收敛，后来有人提出了改进的IIS(Improved Iterative Scaling)算法，使得最大熵模型变得实用。
 1. 初始化参数，令 $$w_{i} = 0$$
 2. 令$$\delta_{i}$$是方程
 ```math
@@ -293,21 +293,21 @@ A(\delta|w) = \sum_{x, y}\tilde{p}(x, y)\sum_{i=1}^{n}\delta_{i}f_{i}(x, y) + 1 
 L(w + \delta) - L(w) \geqslant A(\delta|w)
 ```
 
-令$$f^{\#}(x, y) = \sum_{i=1}^{n}f_{i}(x, y)$$
+令$$f^{*}(x, y) = \sum_{i=1}^{n}f_{i}(x, y)$$
 ```math
-A(\delta|w) = \sum_{x, y}\tilde{p}(x, y)\sum_{i=1}^{n}\delta_{i}f_{i}(x, y) + 1 - \sum_{x}\tilde{p}(x)\sum_{y}p(y|x)\exp(f^{\#}(x, y)\sum_{i=1}^{n}\delta_{i}\frac{f_{i}(x, y)}{f^{\#}(x, y)})
+A(\delta|w) = \sum_{x, y}\tilde{p}(x, y)\sum_{i=1}^{n}\delta_{i}f_{i}(x, y) + 1 - \sum_{x}\tilde{p}(x)\sum_{y}p(y|x)\exp(f^{*}(x, y)\sum_{i=1}^{n}\delta_{i}\frac{f_{i}(x, y)}{f^{*}(x, y)})
 ```
-因为$$\frac{f_{i}(x, y)}{f^{\#}(x, y)} \geqslant 0$$且$$\sum_{i=1}^{n}\frac{f_{i}(x, y)}{f^{\#}(x, y)} = 1$$，且指数函数是凸函数，若把$$\frac{f_{i}(x, y)}{f^{\#}(x, y)}$$看成是某个概率，根据Jensen不等式(见EM算法中的介绍)有：
+因为$$\frac{f_{i}(x, y)}{f^{*}(x, y)} \geqslant 0$$，$$\sum_{i=1}^{n}\frac{f_{i}(x, y)}{f^{*}(x, y)} = 1$$，且指数函数是凸函数，若把$$\frac{f_{i}(x, y)}{f^{*}(x, y)}$$看成是某个概率，根据Jensen不等式(见EM算法中的介绍)有：
 ```math
-\exp(f^{\#}(x, y)\sum_{i=1}^{n}\delta_{i}\frac{f_{i}(x, y)}{f^{\#}(x, y)}) \leqslant \sum_{i=1}^{n}\frac{f_{i}(x, y)}{f^{\#}(x, y)}\exp(\delta_{i}f^{\#}(x, y))
+\exp(f^{*}(x, y)\sum_{i=1}^{n}\delta_{i}\frac{f_{i}(x, y)}{f^{*}(x, y)}) \leqslant \sum_{i=1}^{n}\frac{f_{i}(x, y)}{f^{*}(x, y)}\exp(\delta_{i}f^{*}(x, y))
 ```
 所以有:
 ```math
-A(\delta|w) \geqslant \sum_{x, y}\tilde{p}(x, y)\sum_{i=1}^{n}\delta_{i}f_{i}(x, y) + 1 - \sum_{x}\tilde{p}(x)\sum_{y}p(y|x)\sum_{i=1}^{n}\frac{f_{i}(x, y)}{f^{\#}(x, y)}\exp(\delta_{i}f^{\#}(x, y))
+A(\delta|w) \geqslant \sum_{x, y}\tilde{p}(x, y)\sum_{i=1}^{n}\delta_{i}f_{i}(x, y) + 1 - \sum_{x}\tilde{p}(x)\sum_{y}p(y|x)\sum_{i=1}^{n}\frac{f_{i}(x, y)}{f^{*}(x, y)}\exp(\delta_{i}f^{*}(x, y))
 ```
 令
 ```math
-B(\delta|w) = \sum_{x, y}\tilde{p}(x, y)\sum_{i=1}^{n}\delta_{i}f_{i}(x, y) + 1 - \sum_{x}\tilde{p}(x)\sum_{y}p(y|x)\sum_{i=1}^{n}\frac{f_{i}(x, y)}{f^{\#}(x, y)}\exp(\delta_{i}f^{\#}(x, y))
+B(\delta|w) = \sum_{x, y}\tilde{p}(x, y)\sum_{i=1}^{n}\delta_{i}f_{i}(x, y) + 1 - \sum_{x}\tilde{p}(x)\sum_{y}p(y|x)\sum_{i=1}^{n}\frac{f_{i}(x, y)}{f^{*}(x, y)}\exp(\delta_{i}f^{*}(x, y))
 ```
 则有
 ```math
@@ -315,9 +315,9 @@ L(w + \delta) - L(w) \geqslant B(\delta|w)
 ```
 再求$$B(\delta|w)$$对$$\delta_{i}$$的偏导，令偏导为0，求出使$$B(\delta|w)$$取得最大的$$\delta$$.
 ```math
-\frac{\partial B(\delta|w)}{\partial \delta_{i}} = \sum_{x, y}\tilde{p}(x, y)f_{i}(x, y) - \sum_{x}\tilde{p}(x)\sum_{y}p(y|x)f_{i}(x, y)\exp(\delta_{i}f^{\#}(x, y))
+\frac{\partial B(\delta|w)}{\partial \delta_{i}} = \sum_{x, y}\tilde{p}(x, y)f_{i}(x, y) - \sum_{x}\tilde{p}(x)\sum_{y}p(y|x)f_{i}(x, y)\exp(\delta_{i}f^{*}(x, y))
 ```
 ```math
-= E_{\tilde{P}}(f_{i}) - \sum_{x, y}\tilde{p}(x)p(y|x)f_{i}(x,y)\exp(\delta_{i}f^{\#}(x, y)) = 0
+= E_{\tilde{P}}(f_{i}) - \sum_{x, y}\tilde{p}(x)p(y|x)f_{i}(x,y)\exp(\delta_{i}f^{*}(x, y)) = 0
 ```
 这就是IIS算法第2步的方程。
