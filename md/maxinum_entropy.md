@@ -245,22 +245,22 @@ L(P^{*}, w) = \sum_{x, y}\tilde{p}(x)p^{*}(y|x)\log p^{*}(y|x) + w_{0}(1 - \sum_
 ```
 
 此外，还有一种专为最大熵模型设计的优化算法，叫做GIS(Generalized Iterative Scaling)算法:
-1. 初始化参数，令 $$w_{i} = 0$$
-2. 计算$$E_{\tilde{P}}(f_{i})$$
-3. 计算$$E_{p}(f_{i})$$
-4. 更新参数：$$w_{i} = w_{i} + \eta\log \frac{E_{\tilde{P}}(f_{i})}{E_{p}(f_{i})} $$
-5. 若$$|\log \frac{E_{\tilde{P}}(f_{i})}{E_{p}(f_{i})}| \lt \epsilon$$，则停止迭代，否则转到第3步
+1.初始化参数，令 $$w_{i} = 0$$
+2.计算$$E_{\tilde{P}}(f_{i})$$
+3.计算$$E_{p}(f_{i})$$
+4.更新参数：$$w_{i} = w_{i} + \eta\log \frac{E_{\tilde{P}}(f_{i})}{E_{p}(f_{i})} $$
+5.若$$|\log \frac{E_{\tilde{P}}(f_{i})}{E_{p}(f_{i})}| \lt \epsilon$$，则停止迭代，否则转到第3步
 
 其中的$$\eta$$类似梯度下降法中的学习率，一般可设为$$\frac{1}{\sum_{i=1}^{n}f_{i}(x,y)}$$。
 GIS算法的问题是每次迭代需要的时间都很长，而且需要很多次迭代才能收敛，后来有人提出了改进的IIS(Improved Iterative Scaling)算法，使得最大熵模型变得实用。
-1. 初始化参数，令 $$w_{i} = 0$$
-2. 令$$\delta_{i}$$是方程
+1.初始化参数，令 $$w_{i} = 0$$
+2.令$$\delta_{i}$$是方程
 ```math
 \sum_{x, y}\tilde{p}(x)p(y|x)f_{i}(x,y)\exp(\delta_{i}\sum_{i=1}^{n}f_{i}(x,y)) = E_{\tilde{P}}(f_{i})
 ```
 的解。
-3. 更新参数：$$w_{i} = w_{i} + \delta_{i}$$
-4. 若$$|\delta_{i}| \lt \epsilon$$，则停止迭代，否则转到第2步
+3.更新参数：$$w_{i} = w_{i} + \delta_{i}$$
+4.若$$|\delta_{i}| \lt \epsilon$$，则停止迭代，否则转到第2步
 
 可以看出，GIS算法和IIS算法的不同就是每个迭代参数的变化量是不同的。
 IIS算法的关键就是第2步中的方程的求解，若$$\sum_{i=1}^{n}f_{i}(x,y)=C$$是一个常量，可以直接求解得:
