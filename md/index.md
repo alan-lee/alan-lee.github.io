@@ -16,7 +16,7 @@
 
 8. [Maximun Entropy Model](index.html?md=maxinum_entropy.md)
 
-8. AdaBoost
+8. [AdaBoost](index.html?md=adaBoost.md)
 
 9. [Learning Theory](index.html?md=learning_theory.md)
 
