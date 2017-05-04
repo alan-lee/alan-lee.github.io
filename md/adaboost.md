@@ -271,7 +271,7 @@ Z_{t} = \sum_{i=1}^{m}w_{ti} \cdot \exp(-\alpha_{t}y_{i}G_{t}(x_{i}))
 ```math
 =2\sqrt{e_{t}(1-e_{t})} = \sqrt{1 - 4\gamma_{t}^{2}}
 ```
-其中根据a_{t}的定义可得：$$\exp(a_{t}) = \sqrt{\frac{1-e_{t}}{e_{t}}}$$，$$\gamma_{t} = 2e_{t} -1$$。
+其中根据$$a_{t}$$的定义可得：$$\exp(a_{t}) = \sqrt{\frac{1-e_{t}}{e_{t}}}$$，$$\gamma_{t} = 2e_{t} -1$$。
 
 根据$$e^{x}$$和$$\sqrt{1-x}$$的泰勒展开式可得：
 ```math
